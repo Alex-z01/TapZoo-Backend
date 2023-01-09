@@ -103,7 +103,6 @@ module.exports = server => {
 
     server.post('/login', async (req, res) => {
         const { rUsername, rPassword } = req.body;
-        console.log(`${rUsername} and ${rPassword}`);
 
         if (!rUsername) {
             res.send({ code: 1, response: "Please input a valid username", msg: {} });
@@ -134,8 +133,8 @@ module.exports = server => {
         // Update the player's login time
         player.login = Date.now();
         player.save();
-    
-        var zoo = await Zoo.findOne({"player": player._id});
+
+        var zoo = await Zoo.findOne({player: player._id});
 
         if(zoo == null)
         {
@@ -146,15 +145,11 @@ module.exports = server => {
             await zoo.save();
         }
 
-        // Send the response
-        console.log(`${player.username} logged in!`);
-        console.log(player);
-
         res.send({ code: 0, response: "Logged in!", msg: 
             {
                 playerData: JSON.stringify(player),
                 zooData: JSON.stringify(zoo)
-            } 
+            }
         });
     });
 
@@ -186,7 +181,6 @@ module.exports = server => {
         const update = req.body;
 
         data = JSON.parse(update.data);
-        console.log(data);
 
         const player = Player.findByIdAndUpdate(playerId, data, (error, player) => {
             if (error)
