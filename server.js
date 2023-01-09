@@ -20,6 +20,10 @@ mongoose.connect(keys.mongoURI, { useNewUrlParser: true })
   .then(res => console.log('Connected to DB!'))
   .catch(err => console.log(err));
 
+  
+require('./models/Player');
+require('./models/Zoo');
+
 // Setup routes
 require('./routes/accountRoutes')(server);
 require('./routes/zooRoutes')(server);
