@@ -1,6 +1,30 @@
 
 const Zoo = require('../models/Zoo');
 
+function CreateZoo(playerId) {
+    var defaultCells = []
+
+    for(let i = 0; i < 15; i++)
+    {
+      for(let j = 0; j < 15; j++)
+      {
+        defaultCells.push({
+          pos_x: i,
+          pos_y: j,
+          status: 'INVALID',
+          current_income: 0
+        });
+      }
+    }
+
+    var zoo = Zoo.create({
+        player: playerId,
+        cells: defaultCells
+    })
+
+    return zoo;
+}
+
 module.exports = server => {
 
     server.get('/zoos/:playerId', async (req, res) => {
@@ -8,14 +32,18 @@ module.exports = server => {
 
         const filter = { player: playerId };
 
-        const zoo = Zoo.findOne(filter, (error, zoo) => {
-            if(error)
-            {
-                res.send(error);
-            } else {
-                res.send(zoo);
-            }
-        });
+        var zoo = await Zoo.findOne(filter);
+
+        if(zoo == null)
+        {
+            zoo = new Zoo({
+                player: playerId
+            });
+
+            await zoo.save();
+        }
+
+        res.send({code: 0, msg: {zoo}});
     })
 
     server.post('/zoos/:playerId/update', async (req, res) => {
