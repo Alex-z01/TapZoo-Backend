@@ -38,7 +38,8 @@ const playerSchema = new mongoose.Schema({
     default: Date.now
   },
   logoutTime: {
-    type: Date
+    type: Date,
+    default: null
   }
 });
 
